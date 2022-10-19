@@ -10,7 +10,7 @@ contract Bet {
     mapping(address => uint) public bettorsAmounts;
 
     event Transfer(address indexed _from, address _to, uint amount);
-
+    event BettorTransfer(address indexed _from, address _to, uint amount);
     constructor(){
         owner = msg.sender;
     }
@@ -27,7 +27,7 @@ contract Bet {
 
     function transfer(address bettor, uint amount) internal returns (bool){
         if (win) {
-            emit Transfer(msg.sender, bettor, amount);
+            emit BettorTransfer(msg.sender, bettor, amount);
         }else{
             emit Transfer(bettor,msg.sender,amount);
         }
