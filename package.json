@@ -1,0 +1,11 @@
+{
+  "name": "bet",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:mustafadervisglu/bet.git",
+  "author": "mustafa <mustafadervisoglu16@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "keccak256": "^1.0.6"
+  }
+}
