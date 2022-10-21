@@ -15,6 +15,8 @@ contract Bet {
         owner = msg.sender;
     }
 
+    //function that calculates bet result;
+
     function resultBet(uint bettorNumber) external view returns (bool) {
         require(bettorNumber < 97, "your number must be greater than 97");
 
@@ -37,6 +39,7 @@ contract Bet {
         return true;
     }
 
+    // function that calculates how much money the user will earn;
     function xAmount(uint bettorNumber, uint bettorAmount) internal returns (uint){
         return ((100 / (bettorNumber - 1)) - ((100 - bettorNumber) / 100)) * bettorAmount;
     }
