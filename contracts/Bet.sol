@@ -30,9 +30,9 @@ contract Bet {
     function transfer(address bettor, uint amount, uint bettorNumber) internal returns (bool){
         uint totalAmount = xAmount(bettorNumber, amount);
         if (win) {
-            emit Win(msg.sender, bettor, amount);
+            emit Win(msg.sender, bettor, totalAmount);
         } else {
-            emit Lose(bettor, msg.sender, amount);
+            emit Lose(bettor, msg.sender, totalAmount);
         }
         return true;
     }
