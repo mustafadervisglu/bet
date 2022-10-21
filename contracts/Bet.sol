@@ -23,7 +23,7 @@ contract Bet {
         randomNumber = uint8(uint256(keccak256(
                 abi.encodePacked(block.timestamp, block.difficulty))) % 100);
 
-        if (bettorNumber < randomNumber && bettorNumber == randomNumber) {
+        if (bettorNumber < randomNumber && bettorNumber != randomNumber) {
             win = true;
         }
         return win;
