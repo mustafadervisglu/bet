@@ -1,46 +1,53 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.9;
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.7.0 <0.9.0;
 
 contract Bet {
 
     address public owner;
     uint public randomNumber;
-    bool public win = false;
+
 
     mapping(address => uint) public bettorsAmounts;
 
+
+    constructor() payable  {
+        owner = payable(msg.sender);
+    }
     event Lose(address indexed _from, address _to, uint amount);
     event Win(address indexed _from, address _to, uint amount);
-    constructor(){
-        owner = msg.sender;
-    }
-
     //function that calculates bet result;
 
-    function resultBet(uint bettorNumber) external view returns (bool) {
-        require(bettorNumber < 97, "your number must be greater than 97");
+    function resultBet(uint bettorNumber, uint amount, address payable bettorAddress) payable betRole(bettorNumber) external returns (bool) {
 
+        uint totalAmount = xAmount(bettorNumber, amount);
+        require(address(this).balance > totalAmount, "your balance must be greater than your bet");
         randomNumber = uint8(uint256(keccak256(
                 abi.encodePacked(block.timestamp, block.difficulty))) % 100);
 
-        if (bettorNumber < randomNumber && bettorNumber != randomNumber) {
-            win = true;
-        }
-        return win;
-    }
-
-    function transfer(address bettor, uint amount, uint bettorNumber) internal returns (bool){
-        uint totalAmount = xAmount(bettorNumber, amount);
-        if (win) {
-            emit Win(msg.sender, bettor, totalAmount);
+        if (bettorNumber > randomNumber) {
+            (bool sent,) = payable(owner).call{value : totalAmount}("");
+            // bool winBettor = bettorAddress.send(totalAmount) transfer bettor;
+            emit Win(owner, bettorAddress, totalAmount);
+            return sent;
         } else {
-            emit Lose(bettor, msg.sender, totalAmount);
+            (bool sent,) = bettorAddress.call{value : totalAmount}("");
+            emit Lose(bettorAddress, owner, totalAmount);
+            return sent;
         }
-        return true;
+
+        // transfer contract
+
     }
 
+    modifier betRole(uint bettorNumber) {
+        require(bettorNumber < 97, "your number must be greater than 97");
+        _;
+    }
     // function that calculates how much money the user will earn;
-    function xAmount(uint bettorNumber, uint bettorAmount) internal returns (uint){
-        return ((100 / (bettorNumber - 1)) - ((100 - bettorNumber) / 100)) * bettorAmount;
+    function xAmount(uint bettorNumber, uint bettorAmount) public pure returns (uint){
+        return (((100 / (bettorNumber - 1)) - (100 - bettorNumber) / 100)) * bettorAmount;
+    }
+
+    receive() external payable {
     }
 }
