@@ -6,6 +6,7 @@ contract Bet {
     address payable public owner;
     uint public randomNumber;
     uint256 public betId;
+    uint256 public lastBetId;
     mapping(uint256 => Result) public results;
 
     struct Result{
@@ -37,14 +38,14 @@ contract Bet {
         require(msg.value > 0, "Error, msg.value must be greater than 0");
         results[betId] = Result(betId, bettorNumber ,msg.value, payable(msg.sender));
         betId += 1;
-    randomNumberGenerator();
+        randomNumberGenerator();
         return true;
     }
 
 
     function resultBet(uint random) external payable returns (bool) {
         uint winAmount = 0;
-        for (uint256 i = betId - 1; i < betId; i++) {
+        for (uint256 i = lastBetId; i < betId; i++) {
             if (random < results[i].bet) {
                 // winAmount that calculates how much money the user will earn;
                 winAmount = ((981000 / results[i].bet) * msg.value) / 10000;
@@ -56,6 +57,7 @@ contract Bet {
                 break;
             }
         }
+        lastBetId = betId;
         return true;
     }
 
