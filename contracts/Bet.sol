@@ -35,9 +35,9 @@ contract Bet {
     function roll(uint bettorNumber)public betRole(bettorNumber) payable returns(bool) {
         require(msg.sender.balance >= 1 ether, "Error, msg.value must be at least equal to 1 eth");
         require(msg.value > 0, "Error, msg.value must be greater than 0");
-        betId += 1;
         results[betId] = Result(betId, bettorNumber ,msg.value, payable(msg.sender));
-        randomNumberGenerator();
+        betId += 1;
+    randomNumberGenerator();
         return true;
     }
 
@@ -50,8 +50,11 @@ contract Bet {
                 winAmount = ((981000 / results[i].bet) * msg.value) / 10000;
                 results[i].player.transfer(winAmount);
                 emit Win(results[i].id, results[i].bet, randomNumber, winAmount,results[i].player, block.timestamp);
+                break;
+            }else{
+                emit Lose(results[i].id, results[i].bet, randomNumber, winAmount, results[i].player, block.timestamp);
+                break;
             }
-            emit Lose(results[i].id, results[i].bet, randomNumber, winAmount, results[i].player, block.timestamp);
         }
         return true;
     }
