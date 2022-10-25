@@ -34,7 +34,7 @@ contract Bet {
     }
 
     function roll(uint bettorNumber)public betRole(bettorNumber) payable returns(bool) {
-        require(msg.sender.balance >= 1 ether, "Error, msg.value must be at least equal to 1 eth");
+
         require(msg.value > 0, "Error, msg.value must be greater than 0");
         results[betId] = Result(betId, bettorNumber ,msg.value, payable(msg.sender));
         betId += 1;
@@ -52,10 +52,8 @@ contract Bet {
                 results[i].player.transfer(winAmount);
                 emit Win(results[i].id, results[i].bet, randomNumber, winAmount,results[i].player, block.timestamp);
                 break;
-            }else{
-                emit Lose(results[i].id, results[i].bet, randomNumber, winAmount, results[i].player, block.timestamp);
-                break;
             }
+            emit Lose(results[i].id, results[i].bet, randomNumber, winAmount, results[i].player, block.timestamp);
         }
         lastBetId = betId;
         return true;
