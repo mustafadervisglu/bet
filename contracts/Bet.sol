@@ -25,13 +25,13 @@ contract Bet {
     event Received(address indexed _from, uint256 _amount);
     event Withdraw(address indexed _from, address _to, uint256 _amount);
     //function that generates random number;
-    function randomNumberGenerator() public returns (uint){
+    function randomNumberGenerator() internal returns (uint){
         randomNumber = uint8(uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 100);
         this.resultBet(randomNumber);
         return randomNumber;
     }
 
-    function roll(uint bettorNumber) public betRole(bettorNumber) payable returns (uint) {
+    function roll(uint bettorNumber) external betRole(bettorNumber) payable returns (uint) {
 
         require(msg.sender.balance > 0 , "Error, msg.value must be greater than 0");
         results[betId] = Result(betId, bettorNumber, msg.value, payable(msg.sender));
@@ -41,7 +41,7 @@ contract Bet {
     }
 
 
-    function resultBet(uint random) external payable returns (bool) {
+    function resultBet(uint random) public payable returns (bool) {
         uint winAmount = 0;
         for (uint256 i = lastBetId; i < betId; i++) {
             if (random < results[i].bet) {
