@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT;
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
 contract Bet {
@@ -9,7 +9,7 @@ contract Bet {
     uint256 public lastBetId;
     mapping(uint256 => Result) public results;
 
-    struct Result{
+    struct Result {
         uint256 id;
         uint256 bet;
         uint256 amount;
@@ -24,22 +24,20 @@ contract Bet {
     event Lose(uint256 id, uint256 bet, uint256 randomNumber, uint256 amount, address player, uint256 time);
     event Received(address indexed _from, uint256 _amount);
     event Withdraw(address indexed _from, address _to, uint256 _amount);
-
     //function that generates random number;
-
-    function randomNumberGenerator() internal returns(uint){
-        randomNumber = uint8(uint256(keccak256(abi.encodePacked(block.timestamp,block.difficulty)))%100);
+    function randomNumberGenerator() public returns (uint){
+        randomNumber = uint8(uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 100);
         this.resultBet(randomNumber);
         return randomNumber;
     }
 
-    function roll(uint bettorNumber)public betRole(bettorNumber) payable returns(bool) {
+    function roll(uint bettorNumber) public betRole(bettorNumber) payable returns (uint) {
 
-        require(msg.value > 0, "Error, msg.value must be greater than 0");
-        results[betId] = Result(betId, bettorNumber ,msg.value, payable(msg.sender));
+        require(msg.sender.balance > 0 , "Error, msg.value must be greater than 0");
+        results[betId] = Result(betId, bettorNumber, msg.value, payable(msg.sender));
         betId += 1;
-        randomNumberGenerator();
-        return true;
+        randomNumber = randomNumberGenerator();
+        return randomNumber;
     }
 
 
@@ -50,7 +48,7 @@ contract Bet {
                 // winAmount that calculates how much money the user will earn;
                 winAmount = ((981000 / results[i].bet) * msg.value) / 10000;
                 results[i].player.transfer(winAmount);
-                emit Win(results[i].id, results[i].bet, randomNumber, winAmount,results[i].player, block.timestamp);
+                emit Win(results[i].id, results[i].bet, randomNumber, winAmount, results[i].player, block.timestamp);
                 break;
             }
             emit Lose(results[i].id, results[i].bet, randomNumber, winAmount, results[i].player, block.timestamp);
@@ -59,11 +57,11 @@ contract Bet {
         return true;
     }
 
-
-    function withdraw(uint amount) external onlyOwner payable {
+    function withdraw(uint amount) public onlyOwner returns (bool){
         require(address(this).balance >= amount, "your amount must be equal contract balance or greater than contract balance");
-        owner.transfer(amount);
-        emit Withdraw(owner, address(this),amount);
+        payable(msg.sender).transfer(amount);
+        emit Withdraw(address(this), msg.sender, amount);
+        return true;
     }
 
     modifier onlyOwner(){
