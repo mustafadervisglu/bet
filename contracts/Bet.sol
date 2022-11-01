@@ -35,25 +35,23 @@ contract Bet {
 
         require(msg.sender.balance > 0 , "Error, msg.value must be greater than 0");
         results[betId] = Result(betId, bettorNumber, msg.value, payable(msg.sender));
-        betId += 1;
         randomNumber = randomNumberGenerator();
-        return randomNumber;
+        betId += 1;
+    return randomNumber;
     }
 
 
     function resultBet(uint random) public payable returns (bool) {
         uint winAmount = 0;
-        for (uint256 i = lastBetId; i < betId; i++) {
-            if (random < results[i].bet) {
+            if (random < results[betId].bet) {
                 // winAmount that calculates how much money the user will earn;
-                winAmount = ((981000 / results[i].bet) * msg.value) / 10000;
-                results[i].player.transfer(winAmount);
-                emit Win(results[i].id, results[i].bet, randomNumber, winAmount, results[i].player, block.timestamp);
-                break;
+                winAmount = ((981000 / results[betId].bet) * msg.value) / 10000;
+                results[betId].player.transfer(winAmount);
+                emit Win(results[betId].id, results[betId].bet, randomNumber, winAmount, results[betId].player, block.timestamp);
+                return true;
             }
-            emit Lose(results[i].id, results[i].bet, randomNumber, winAmount, results[i].player, block.timestamp);
-        }
-        lastBetId = betId;
+            emit Lose(results[betId].id, results[betId].bet, randomNumber, winAmount, results[betId].player, block.timestamp);
+
         return true;
     }
 
