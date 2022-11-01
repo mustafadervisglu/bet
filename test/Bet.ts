@@ -42,7 +42,7 @@ describe('Bet', function () {
             it(' the number must be repeated no more than 6',
                 async function () {
                     const repetitions: Record<string, number> = {};
-                    for (let i = 0; i < 1; i++) {
+                    for (let i = 0; i < 50; i++) {
                         let number = await randNum();
                         repetitions[number] = (repetitions[number] || 0) + 1;
                     }
@@ -50,7 +50,7 @@ describe('Bet', function () {
                     expect(repetitionAmountArr).to.be.not.include(6);
                 });
             it('(greaterThan50 - lessThan50) < 25', async function () {
-                for (let i = 0; i < 1; i++) {
+                for (let i = 0; i < 50; i++) {
                     let number = await randNum();
                     if (number < 50) {
                         lessThan50 += 1;

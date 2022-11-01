@@ -14,7 +14,7 @@ const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
     gasReporter: {
         enabled: true,
-        currency: "USD",
+        currency: "USD"
     },
     contractSizer: {
         alphaSort: true,

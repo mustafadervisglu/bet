@@ -6,7 +6,6 @@ contract Bet {
     address payable public owner;
     uint public randomNumber;
     uint256 public betId;
-    uint256 public lastBetId;
     mapping(uint256 => Result) public results;
 
     struct Result {
