@@ -5,10 +5,9 @@ coverage
 coverage.json
 typechain
 typechain-types
-bet.iml
+
 #Hardhat files
 cache
 artifacts
 
 
-!/bet.iml
