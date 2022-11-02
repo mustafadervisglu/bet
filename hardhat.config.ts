@@ -4,6 +4,9 @@ import "@nomiclabs/hardhat-ganache";
 import "hardhat-contract-sizer";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
+import "@typechain/hardhat";
+import "@nomiclabs/hardhat-ethers";
+import "@nomiclabs/hardhat-waffle";
 import * as dotenv from 'dotenv';
 
 dotenv.config();

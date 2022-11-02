@@ -1,22 +1,18 @@
-import {time, loadFixture} from "@nomicfoundation/hardhat-network-helpers";
-import {anyValue} from "@nomicfoundation/hardhat-chai-matchers/withArgs";
-import {expect, assert} from "chai";
+import {expect} from "chai";
 import {ethers} from "hardhat";
-import {getContractAddress} from "@ethersproject/address";
-import {Contract} from "ethers";
-import {BetInterface} from "../typechain-types/Bet";
 import "@nomiclabs/hardhat-ethers";
 import "@nomicfoundation/hardhat-chai-matchers";
-import type {BigNumber, utils, BytesLike, Signer} from "ethers";
-
+import type {BigNumber, Signer} from "ethers";
+import {Bet} from "../typechain-types";
+import {Bet__factory} from "../typechain-types";
 
 describe('Bet', function () {
-    let bet: Contract;
+    let bet: Bet;
     let owner: Signer;
     let otherAccount: Signer;
     beforeEach(async function () {
         [owner, otherAccount] = await ethers.getSigners();
-        const Bet = await ethers.getContractFactory("Bet");
+        const Bet: Bet__factory = await ethers.getContractFactory("Bet");
         bet = await Bet.deploy({value: ethers.utils.parseEther("100")});
         await bet.deployed();
     });
@@ -34,7 +30,7 @@ describe('Bet', function () {
             let greaterThan50: number = 0;
 
             async function randNum() {
-                let roll = await bet.roll(54, {value: ethers.utils.parseEther("1")});
+                await bet.roll(54, {value: ethers.utils.parseEther("1")});
                 let randomNumber: BigNumber = await bet.randomNumber();
                 return Number(randomNumber);
             }
@@ -42,7 +38,7 @@ describe('Bet', function () {
             it(' the number must be repeated no more than 6',
                 async function () {
                     const repetitions: Record<string, number> = {};
-                    for (let i = 0; i < 50; i++) {
+                    for (let i = 0; i < 1; i++) {
                         let number = await randNum();
                         repetitions[number] = (repetitions[number] || 0) + 1;
                     }
@@ -50,7 +46,7 @@ describe('Bet', function () {
                     expect(repetitionAmountArr).to.be.not.include(6);
                 });
             it('(greaterThan50 - lessThan50) < 25', async function () {
-                for (let i = 0; i < 50; i++) {
+                for (let i = 0; i < 1; i++) {
                     let number = await randNum();
                     if (number < 50) {
                         lessThan50 += 1;
