@@ -1,18 +1,19 @@
-import {HardhatUserConfig} from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox";
-import "@nomiclabs/hardhat-ganache";
-import "hardhat-contract-sizer";
-import "hardhat-gas-reporter";
-import "solidity-coverage";
-import "@typechain/hardhat";
-import "@nomiclabs/hardhat-ethers";
-import "@nomiclabs/hardhat-waffle";
-import * as dotenv from 'dotenv';
+import { HardhatUserConfig } from "hardhat/config"
+import "@nomicfoundation/hardhat-toolbox"
+import "@nomiclabs/hardhat-ganache"
+import "hardhat-contract-sizer"
+import "hardhat-gas-reporter"
+import "solidity-coverage"
+import "@typechain/hardhat"
+import "@nomiclabs/hardhat-ethers"
+import "@nomiclabs/hardhat-waffle"
+import * as dotenv from "dotenv"
 
-dotenv.config();
+dotenv.config()
 
-const BNB_RPC_URL = process.env.BNB_RPC_URL;
-const PRIVATE_KEY: any = process.env.PRIVATE_KEY;
+const BNB_RPC_URL = process.env.BNB_RPC_URL
+const PRIVATE_KEY: any = process.env.PRIVATE_KEY
+const GOERLI_RPC_URL = process.env.ETH_GOERLI_RPC_URL
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
     gasReporter: {
@@ -30,6 +31,11 @@ const config: HardhatUserConfig = {
             url: "http://127.0.0.1:8545/",
             chainId: 31337
         },
+        goerli: {
+            url: GOERLI_RPC_URL,
+            chainId: 5,
+            accounts: [PRIVATE_KEY]
+        },
         bnb: {
             url: BNB_RPC_URL,
             chainId: 97,
@@ -37,6 +43,6 @@ const config: HardhatUserConfig = {
         }
     },
     solidity: "0.8.17"
-};
+}
 
-export default config;
+export default config
